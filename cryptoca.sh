@@ -83,8 +83,8 @@ function name_ca(){
 function create_structure(){
   unset a
   clear
-  echo "Current CA Directory: $DIR_CA"
-  echo "Would you like to create a new CA directory structure?[y/n]"
+  echo "Current root CA Directory: $DIR_CA"
+  echo "Would you like to e create this new CA directory structure?[y/n]"
   read a
   if [ "$a" = "y" ]
   then
@@ -112,7 +112,7 @@ organizationName_default=$OUNAME
 organizationalUnitName_default=$UNITNAME
 emailAddress_default=$EMAIL
 EOF
-  echo "Would you like to set the variables?[y/n]"
+  echo "Would you like to change these variables?[y/n]"
   read a
   if [ "$a" = "y" ]
   then
