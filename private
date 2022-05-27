@@ -1,0 +1,29 @@
+#!/bin/bash
+########################################################################
+#Script Name	: CRYPTOCA
+#Description	: Create a CA to sign and issue certificates.
+#Args           : Interactive
+#Author       	: Dari Garcia (manofftoday)
+#GitHub         : https://github.com/manofftoday
+#File           : private
+#Description    : Private key functions
+########################################################################
+function private_key_ca(){
+  clear
+  openssl genrsa -aes256 -out $DIR_CA/private/${CA_NAME}.key.pem 4096
+  chmod 400 $DIR_CA/private/${CA_NAME}.key.pem
+  echo "$CA_NAME private key created"
+}
+function private_cert(){
+  clear
+  echo "Creating certificate issued by $CA_NAME"
+  read -p "Enter the certificate URL: " SRVURL
+  echo "Would you like to use aes256 to generate the certificate?[y/n]"
+  read a
+  if [ "$a" = "y" ]
+  then
+    openssl genrsa -aes256 -out $DIR_CA/private/${SRVURL}.key.pem 2048
+  fi
+  openssl genrsa -out $DIR_CA/private/${SRVURL}.key.pem 2048
+  chmod 400 $DIR_CA/private/${SRVURL}.key.pem
+}

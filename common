@@ -1,0 +1,94 @@
+#!/bin/bash
+function main_menu(){
+  clear
+  A='Welcome to CRYPTOCA. Please enter your choice using the number keys: '
+  echo $A
+  options=("Create CA" \
+  "Issue New Certificate" \
+  "Quit")
+  select opt in "${options[@]}"
+  do
+    case $opt in
+            "Create CA")
+                    clear
+                    name_ca;
+                    create_structure;
+                    set_var;
+                    config_file;
+                    private_key_ca;
+                    cert_CA;
+                    verify_CA;
+                    break
+            ;;
+            "Issue New Certificate")
+                    clear
+                    select_ca
+                    private_cert;
+                    csr_cert;
+                    sign_csr_cert;
+                    verify_cert;
+                    break
+            ;;
+            "Quit")
+                    break
+            ;;
+          *) echo "invalid option $REPLY";;
+      esac
+  done
+}
+
+
+
+# File Structure
+
+function create_structure(){
+  unset a
+  clear
+  echo "Current root CA Directory: $DIR_CA"
+  echo "Would you like to e create this new CA directory structure?[y/n]"
+  read a
+  if [ "$a" = "y" ]
+  then
+    echo "Creating new structure..."
+    mkdir  $DIR_CA $DIR_CA/certs $DIR_CA/csr $DIR_CA/crl $DIR_CA/newcerts $DIR_CA/private
+    chmod 700 $DIR_CA/private
+    touch $DIR_CA/index.txt
+    touch $DIR_CA/index.txt.attr
+    echo "1000" > $DIR_CA/serial
+  else
+    clear
+    read -p "Enter the absolute CA Path: " DIR_CA
+  fi
+}
+
+function set_var(){
+unset a
+  clear
+  cat << EOF
+Current Variables:
+countryName_default= $COUNTRY
+stateOrProvinceName_default= $PROVINCE
+localityName_default= $LOCALITY
+organizationName_default=$OUNAME
+organizationalUnitName_default=$UNITNAME
+emailAddress_default=$EMAIL
+EOF
+  echo "Would you like to change these variables?[y/n]"
+  read a
+  if [ "$a" = "y" ]
+  then
+    read -p "Enter countryName: " COUNTRY
+    read -p "Enter stateOrProvinceName: " PROVINCE
+    read -p "Enter localityName: " LOCALITY
+    read -p "Enter organizationName: " OUNAME
+    read -p "Enter organizationalUnitName: " UNITNAME
+    read -p "Enter emailAddress: " EMAIL
+  fi
+}
+
+
+
+
+
+
+
