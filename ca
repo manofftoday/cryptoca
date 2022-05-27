@@ -1,0 +1,46 @@
+#!/bin/bash
+function select_ca(){
+  unset DIR_CA
+  clear
+  read -p "Enter the absolute CA Path: " DIR_CA
+}
+function name_ca(){
+  unset a
+  clear
+  echo "Current CA name configured: $CA_NAME"
+  echo "Would you like to choose a new CA name?[y/n]"
+  read a
+  if [ "$a" = "y" ]
+  then
+    clear
+    unset DIR_CA
+    unset CA_NAME
+    read -p "Select the name for the CA:" CA_NAME
+    echo "CA Selected: $CA_NAME"
+    DIR_CA=/$CA_NAME
+  fi
+}
+function cert_CA(){
+  clear
+  echo "Creating CA Certificate..."
+  read -p "Enter the CA URL: " CAURL
+  read -p "Valid Days: " DAYS
+  export SAN=DNS:$CAURL
+  openssl req -config $DIR_CA/openssl.conf \
+    -key $DIR_CA/private/${CA_NAME}.key.pem \
+    -new -x509 -days $DAYS -sha256 -extensions v3_ca \
+    -out $DIR_CA/certs/${CA_NAME}.cert.pem
+  chmod 444 $DIR_CA/certs/${CA_NAME}.cert.pem
+  echo "CA certificate created"
+}
+function verify_CA(){
+  clear
+  echo "Verifying certificate..."
+  openssl x509 -noout -text -in $DIR_CA/certs/${CA_NAME}.cert.pem
+  echo "Verified."
+}
+function verify_cert(){
+  clear
+  echo "Verifying Certificate..."
+  openssl x509 -noout -text -in ${DIR_CA}/certs/${SRVURL}.cert.pem
+}

@@ -1,0 +1,28 @@
+#!/bin/bash
+#!/bin/bash
+########################################################################
+#Script Name	: CRYPTOCA
+#Description	: Create a CA to sign and issue certificates.
+#Args           : Interactive
+#Author       	: Dari Garcia (manofftoday)
+#GitHub         : https://github.com/manofftoday
+#File           : csr
+#Description    : Certificate signing requests functions
+########################################################################
+function csr_cert(){
+  clear
+  echo "Creating certificate request... $SRVURL"
+  openssl req -config $DIR_CA/openssl.conf \
+      -key $DIR_CA/private/${SRVURL}.key.pem \
+      -new -sha256 -out $DIR_CA/csr/${SRVURL}.csr.pem
+  echo ".csr created for $SRVURL"
+}
+function sign_csr_cert(){
+      clear
+      echo "Signing certificate request... $SRVURL"
+      openssl ca -config $DIR_CA/openssl.conf \
+          -extensions v3_req -days 3650 -notext -md sha256 \
+          -in $DIR_CA/csr/${SRVURL}.csr.pem \
+          -out $DIR_CA/certs/${SRVURL}.cert.pem
+      chmod 444 $DIR_CA/certs/${SRVURL}.cert.pem
+}
